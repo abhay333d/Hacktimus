@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TaskTable } from './components/TaskTable';
 import { AddTaskModal } from './components/AddTaskModal';
+import { Background3D } from './components/Background3D';
 import { api } from './services/api';
 
 function App() {
@@ -48,9 +49,11 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
-      <div className="container mx-auto px-4 py-8">
-        <header className="flex justify-between items-center mb-8">
+    <div className="min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-200 relative">
+      <Background3D />
+      
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        <header className="flex justify-between items-center mb-8 backdrop-blur-sm bg-white/30 dark:bg-black/30 p-4 rounded-xl border border-white/20 shadow-lg">
           <div className="flex items-center gap-3">
             <span className="text-4xl">🤖</span>
             <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
@@ -61,7 +64,7 @@ function App() {
           <div className="flex items-center gap-4">
              <button
               onClick={toggleTheme}
-              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-full hover:bg-white/50 dark:hover:bg-black/50 transition-colors"
               title="Toggle Theme"
             >
               {theme === 'light' ? '🌙' : '☀️'}
@@ -82,7 +85,7 @@ function App() {
         </header>
 
         <main>
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-700">
+          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl shadow-lg overflow-hidden border border-white/20 dark:border-gray-700">
             <TaskTable tasks={tasks} refreshTasks={fetchTasks} />
           </div>
         </main>
