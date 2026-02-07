@@ -2,12 +2,13 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 // Connect to SQLite database
-const dbPath = path.resolve(__dirname, 'chaser.db');
+const dbPath = process.env.DB_PATH || path.resolve(__dirname, 'chaser.db');
+
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
-        console.error('Error opening database ' + dbPath + ': ' + err.message);
+        console.error('Error opening database at ' + dbPath + ': ' + err.message);
     } else {
-        console.log('Connected to the SQLite database.');
+        console.log('Connected to the SQLite database at: ' + dbPath);
         initializeDatabase();
     }
 });
