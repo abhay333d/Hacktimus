@@ -2,9 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const db = require('./db');
+// CHANGE 1: Import axios here
+const axios = require('axios'); 
 
 const app = express();
 const PORT = 3001;
+
+// Define your Boltic Webhook URL here for easy reuse
+const BOLTIC_WEBHOOK_URL = "https://asia-south1.api.boltic.io/service/webhook/temporal/v1.0/f1538e24-b148-451f-bebc-317b3d530547/workflows/execute/83ba9b24-ed5b-4f83-be99-9b4ad3e00196";
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -61,7 +66,7 @@ app.post('/tasks', async (req, res) => {
     }
 });
 
-// Get Users (for assignment dropdown)
+// Get Users
 app.get('/users', async (req, res) => {
     try {
         const users = await dbAll("SELECT * FROM users");
@@ -71,7 +76,7 @@ app.get('/users', async (req, res) => {
     }
 });
 
-// Manual Chase Trigger
+// CHANGE 2: Updated Manual Chase Trigger
 app.post('/tasks/:id/chase', async (req, res) => {
     const taskId = req.params.id;
     try {
@@ -84,7 +89,7 @@ app.post('/tasks/:id/chase', async (req, res) => {
             });
         });
 
-        // 2. Generate Message (Basic "Intelligence" for now)
+        // 2. Generate Message
         const now = new Date();
         const dueDate = new Date(task.due_date);
         const daysOverdue = Math.floor((now - dueDate) / (1000 * 60 * 60 * 24));
@@ -102,8 +107,19 @@ app.post('/tasks/:id/chase', async (req, res) => {
         // 4. Update Task Chase Count
         await dbRun(`UPDATE tasks SET last_chased_at = ?, chase_count = chase_count + 1 WHERE id = ?`, [new Date().toISOString(), taskId]);
         
-        // 5. Mock Boltic Webhook Call (In production, axios.post(BOLTIC_WEBHOOK_URL, { message, email: task.email }))
+        // 5. BOLTIC INTEGRATION (Real Call)
         console.log(`[BOLTIC INTEGRATION] Sending webhook: To=${task.email}, Msg="${message}"`);
+        
+        // Construct the payload matching what you set up in Boltic
+        const bolticPayload = {
+            email: task.email,
+            message: message,
+            user_name: task.name,
+            task_id: taskId
+        };
+
+        // Send to Boltic
+        await axios.post(BOLTIC_WEBHOOK_URL, bolticPayload);
 
         res.json({ success: true, message: "Chase initiated via Boltic", sent_message: message });
 
@@ -113,11 +129,11 @@ app.post('/tasks/:id/chase', async (req, res) => {
     }
 });
 
-// Automated Check Endpoint (to be called by Boltic Scheduler)
+// CHANGE 3: Updated Automated Check Endpoint
 app.get('/tasks/check-overdue', async (req, res) => {
     try {
         const today = new Date().toISOString().split('T')[0];
-        // Find overdue tasks that haven't been chased today
+        
         const query = `
             SELECT tasks.*, users.name, users.email 
             FROM tasks 
@@ -130,17 +146,31 @@ app.get('/tasks/check-overdue', async (req, res) => {
         const overdueTasks = await dbAll(query, [today, today]);
         const chases = [];
 
+        // Loop through every overdue task found
         for (const task of overdueTasks) {
              const message = `Automated Reminder: Hi ${task.name}, "${task.title}" is overdue. Please prioritize.`;
              
-             // Log
+             // Log locally
              await dbRun(`INSERT INTO logs (task_id, chase_type, message_sent) VALUES (?, 'AUTO', ?)`, [task.id, message]);
-             // Update Task
+             
+             // Update Task locally
              await dbRun(`UPDATE tasks SET last_chased_at = ?, chase_count = chase_count + 1 WHERE id = ?`, [new Date().toISOString(), task.id]);
              
-             // Mock Boltic
-             console.log(`[BOLTIC AUTO] Sending webhook: To=${task.email}, Msg="${message}"`);
-             chases.push({ task_id: task.id, sent_to: task.email });
+             // Call Boltic for THIS specific task
+             console.log(`[BOLTIC AUTO] Sending webhook: To=${task.email}`);
+             
+             try {
+                 await axios.post(BOLTIC_WEBHOOK_URL, {
+                    email: task.email,
+                    message: message,
+                    user_name: task.name,
+                    task_id: task.id
+                 });
+                 chases.push({ task_id: task.id, sent_to: task.email, status: 'sent' });
+             } catch (bolticError) {
+                 console.error(`Failed to send Boltic msg for task ${task.id}:`, bolticError.message);
+                 chases.push({ task_id: task.id, sent_to: task.email, status: 'failed' });
+             }
         }
 
         res.json({ success: true, chased_count: chases.length, details: chases });
@@ -149,7 +179,6 @@ app.get('/tasks/check-overdue', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
