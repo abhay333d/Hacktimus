@@ -9,7 +9,7 @@ const app = express();
 const PORT = 3001;
 
 // Define your Boltic Webhook URL here for easy reuse
-const BOLTIC_WEBHOOK_URL = "https://asia-south1.api.boltic.io/service/webhook/temporal/v1.0/f1538e24-b148-451f-bebc-317b3d530547/workflows/trigger/83ba9b24-ed5b-4f83-be99-9b4ad3e00196";
+const BOLTIC_WEBHOOK_URL = "https://asia-south1.api.boltic.io/service/webhook/temporal/v1.0/f1538e24-b148-451f-bebc-317b3d530547/workflows/execute/bd426dd3-5b96-46b2-8aa3-c4202ded98f8";
 
 app.use(cors());
 app.use(bodyParser.json());
