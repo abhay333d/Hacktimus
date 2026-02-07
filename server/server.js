@@ -94,7 +94,7 @@ app.post('/tasks/:id/chase', async (req, res) => {
         const dueDate = new Date(task.due_date);
         const daysOverdue = Math.floor((now - dueDate) / (1000 * 60 * 60 * 24));
         
-        let message = `Hi ${task.name}, just checking in on "${task.title}".`;
+        let message = `Hi ${task.name}, just checking in on '${task.title}'.`;
         if (daysOverdue > 0) {
             message = `Hi ${task.name}, the task "${task.title}" is ${daysOverdue} days overdue. Can you please provide an update?`;
         } else if (daysOverdue === 0) {
@@ -148,7 +148,8 @@ app.get('/tasks/check-overdue', async (req, res) => {
 
         // Loop through every overdue task found
         for (const task of overdueTasks) {
-             const message = `Automated Reminder: Hi ${task.name}, "${task.title}" is overdue. Please prioritize.`;
+             // NEW (Fixed)
+const message = `Automated Reminder: Hi ${task.name}, the task '${task.title}' is overdue. Please prioritize.`;
              
              // Log locally
              await dbRun(`INSERT INTO logs (task_id, chase_type, message_sent) VALUES (?, 'AUTO', ?)`, [task.id, message]);
