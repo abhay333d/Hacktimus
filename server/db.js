@@ -8,7 +8,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Error opening database at ' + dbPath + ': ' + err.message);
     } else {
-        console.log('Connected to the SQLite database at: ' + dbPath);
+        //console.log('Connected to the SQLite database at: ' + dbPath);
         initializeDatabase();
     }
 });
@@ -49,7 +49,7 @@ function initializeDatabase() {
         // Seed some data if users table is empty
         db.get("SELECT count(*) as count FROM users", (err, row) => {
             if (row.count === 0) {
-                 console.log("Seeding initial data...");
+                 //console.log("Seeding initial data...");
                  const stmt = db.prepare("INSERT INTO users (name, email) VALUES (?, ?)");
                  stmt.run("Alice Engineer", "alice@example.com");
                  stmt.run("Bob Manager", "bob@example.com");

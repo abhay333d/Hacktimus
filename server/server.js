@@ -2,13 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const db = require('./db');
-// CHANGE 1: Import axios here
 const axios = require('axios'); 
 
 const app = express();
 const PORT = 3001;
 
-// Define your Boltic Webhook URL here for easy reuse
 const BOLTIC_WEBHOOK_URL = "https://asia-south1.api.boltic.io/service/webhook/temporal/v1.0/f1538e24-b148-451f-bebc-317b3d530547/workflows/execute/bd426dd3-5b96-46b2-8aa3-c4202ded98f8";
 
 app.use(cors());
@@ -76,7 +74,7 @@ app.get('/users', async (req, res) => {
     }
 });
 
-// CHANGE 2: Updated Manual Chase Trigger
+// Manual Chase Trigger
 app.post('/tasks/:id/chase', async (req, res) => {
     const taskId = req.params.id;
     try {
@@ -113,7 +111,7 @@ app.post('/tasks/:id/chase', async (req, res) => {
         await dbRun(`UPDATE tasks SET last_chased_at = ?, chase_count = chase_count + 1 WHERE id = ?`, [new Date().toISOString(), taskId]);
         
         // 5. BOLTIC INTEGRATION (Real Call)
-        console.log(`[BOLTIC INTEGRATION] Sending webhook to: ${task.email}`);
+        // //console.log(`[BOLTIC INTEGRATION] Sending webhook to: ${task.email}`);
         
         // Construct the payload matching what you set up in Boltic
         const bolticPayload = {
@@ -123,7 +121,7 @@ app.post('/tasks/:id/chase', async (req, res) => {
             task_id: taskId
         };
 
-        console.log("[BOLTIC PAYLOAD JSON]", JSON.stringify(bolticPayload));
+        // //console.log("[BOLTIC PAYLOAD JSON]", JSON.stringify(bolticPayload));
 
         // Send to Boltic
         await axios.post(BOLTIC_WEBHOOK_URL, bolticPayload);
@@ -136,7 +134,7 @@ app.post('/tasks/:id/chase', async (req, res) => {
     }
 });
 
-// CHANGE 4: Update Task Status
+// Update Task Status
 app.patch('/tasks/:id/status', async (req, res) => {
     const taskId = req.params.id;
     const { status } = req.body;
@@ -153,7 +151,7 @@ app.patch('/tasks/:id/status', async (req, res) => {
     }
 });
 
-// CHANGE 5: Delete Task Endpoint
+// Delete Task Endpoint
 app.delete('/tasks/:id', async (req, res) => {
     const taskId = req.params.id;
     try {
@@ -166,7 +164,7 @@ app.delete('/tasks/:id', async (req, res) => {
     }
 });
 
-// CHANGE 3: Updated Automated Check Endpoint
+// Updated Automated Check Endpoint
 app.get('/tasks/check-overdue', async (req, res) => {
     try {
         const today = new Date().toISOString().split('T')[0];
@@ -177,8 +175,6 @@ app.get('/tasks/check-overdue', async (req, res) => {
             JOIN users ON tasks.assignee_id = users.id 
             WHERE tasks.due_date < ? 
             AND tasks.status != 'COMPLETED'
-            -- REMOVED DAILY LIMIT CHECK: We want "Run Smart Check" to ALWAYS chase overdue tasks
-            -- AND (tasks.last_chased_at IS NULL OR substr(tasks.last_chased_at, 1, 10) != ?)
         `;
         
         const overdueTasks = await dbAll(query, [today]);
@@ -206,7 +202,7 @@ app.get('/tasks/check-overdue', async (req, res) => {
 
         // 2. Send Boltic Webhooks in Parallel (Faster)
         const webhookPromises = chases.map(async (item) => {
-             console.log(`[BOLTIC AUTO] Sending webhook: To=${item.safeAutoEmail}`);
+             //console.log(`[BOLTIC AUTO] Sending webhook: To=${item.safeAutoEmail}`);
              try {
                  const autoPayload = {
                     email: item.safeAutoEmail,
@@ -214,7 +210,6 @@ app.get('/tasks/check-overdue', async (req, res) => {
                     user_name: item.safeAutoName,
                     task_id: item.task.id
                  };
-                 // console.log("[BOLTIC AUTO PAYLOAD]", JSON.stringify(autoPayload)); // Uncomment for debug
                  await axios.post(BOLTIC_WEBHOOK_URL, autoPayload);
                  return { task_id: item.task.id, status: 'sent' };
              } catch (bolticError) {
@@ -233,5 +228,5 @@ app.get('/tasks/check-overdue', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    //console.log(`Server running on http://localhost:${PORT}`);
 });

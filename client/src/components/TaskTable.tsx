@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 
 
-// Clean up unused imports
 import { ChaseModal } from './ChaseModal';
 import { DeleteConfirmationModal } from './DeleteConfirmationModal';
 
