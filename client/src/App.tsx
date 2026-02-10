@@ -43,25 +43,25 @@ function App() {
       <Background3D />
       
       <div className="container mx-auto px-4 py-8 relative z-10">
-        <header className="flex justify-between items-center mb-8 backdrop-blur-[1px] bg-white/[0.03] p-4 rounded-xl border border-white/10 shadow-lg ring-1 ring-white/5">
-          <div className="flex items-center gap-3">
+        <header className="flex flex-col md:flex-row justify-between items-center mb-8 backdrop-blur-[1px] bg-white/[0.03] p-4 rounded-xl border border-white/10 shadow-lg ring-1 ring-white/5 gap-4 md:gap-0">
+          <div className="flex items-center gap-3 w-full md:w-auto justify-center md:justify-start">
             <span className="text-4xl p-1">🤖</span>
-            <h1 className="text-3xl md:text-3xl p-1 font-extrabold bg-clip-text text-transparent bg-[linear-gradient(to_right,#818cf8,#c084fc,#818cf8)] bg-[length:200%_auto] animate-text-shimmer drop-shadow-sm underline ">
+            <h1 className="text-2xl md:text-3xl p-1 font-extrabold bg-clip-text text-transparent bg-[linear-gradient(to_right,#818cf8,#c084fc,#818cf8)] bg-[length:200%_auto] animate-text-shimmer drop-shadow-sm underline text-center md:text-left">
               Automated Chaser Agent
             </h1>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 w-full md:w-auto justify-center md:justify-end">
 
             <button 
               onClick={handleSmartCheck}
-              className="px-4 py-2 bg-purple-600/40 hover:bg-purple-700/60 backdrop-blur-sm text-white rounded-lg shadow-md transition-all hover:scale-105 flex items-center gap-2 border border-white/10"
+              className="flex-1 md:flex-none justify-center px-4 py-2 bg-purple-600/40 hover:bg-purple-700/60 backdrop-blur-sm text-white rounded-lg shadow-md transition-all hover:scale-105 flex items-center gap-2 border border-white/10 whitespace-nowrap"
             >
               <span>🚀</span> Chase All
             </button>
             <button 
               onClick={() => setShowModal(true)}
-              className="px-4 py-2 bg-blue-600/40 hover:bg-blue-700/60 backdrop-blur-sm text-white rounded-lg shadow-md transition-all hover:scale-105 border border-white/10"
+              className="flex-1 md:flex-none justify-center px-4 py-2 bg-blue-600/40 hover:bg-blue-700/60 backdrop-blur-sm text-white rounded-lg shadow-md transition-all hover:scale-105 border border-white/10 whitespace-nowrap"
             >
               + Add Task
             </button>
