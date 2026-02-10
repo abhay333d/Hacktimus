@@ -27,7 +27,7 @@ export function Loader({ fullscreen = false, message = "Loading..." }: LoaderPro
       </div>
       
       {/* Loading Text */}
-      <div className="mt-6 text-center">
+      <div className="mt-2 ml-2 text-center">
         <h3 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 animate-pulse">
           {message}
         </h3>

@@ -16,6 +16,7 @@ function App() {
   const [showSmartCheckModal, setShowSmartCheckModal] = useState(false);
   const [smartCheckResults, setSmartCheckResults] = useState(null);
   const [isSmartCheckLoading, setIsSmartCheckLoading] = useState(false);
+  const [startNums, setStartNums] = useState(false);
 
   // Animation Refs
   const containerRef = useRef(null);
@@ -87,7 +88,8 @@ function App() {
         duration: 0.8,
         y: 0,
         opacity: 1,
-        ease: "power3.out"
+        ease: "power3.out",
+        onComplete: () => setStartNums(true)
     }, "-=0.4"); // Stats start appearing as table settles
 
   }, { scope: containerRef, dependencies: [isLoading] });
@@ -156,19 +158,19 @@ function App() {
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 shadow-lg hover:bg-white/10 transition-colors">
              <div className="text-gray-400 text-sm font-medium mb-1">Total Tasks</div>
              <div className="text-3xl font-bold text-white">
-                 <ScrollingNumber value={tasks.length} direction="up" />
+                 <ScrollingNumber value={tasks.length} direction="up" trigger={startNums} />
              </div>
           </div>
           <div className="bg-green-500/10 backdrop-blur-sm border border-green-500/20 rounded-xl p-4 shadow-lg hover:bg-green-500/20 transition-colors">
              <div className="text-green-300 text-sm font-medium mb-1">Completed</div>
              <div className="text-3xl font-bold text-green-400">
-               <ScrollingNumber value={tasks.filter((t: any) => t.status === 'COMPLETED').length} direction="down" />
+               <ScrollingNumber value={tasks.filter((t: any) => t.status === 'COMPLETED').length} direction="down" trigger={startNums} />
              </div>
           </div>
           <div className="bg-yellow-500/10 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-4 shadow-lg hover:bg-yellow-500/20 transition-colors">
              <div className="text-yellow-300 text-sm font-medium mb-1">Pending</div>
              <div className="text-3xl font-bold text-yellow-400">
-               <ScrollingNumber value={tasks.filter((t: any) => t.status !== 'COMPLETED').length} direction="up" />
+               <ScrollingNumber value={tasks.filter((t: any) => t.status !== 'COMPLETED').length} direction="up" trigger={startNums} />
              </div>
           </div>
           <div className="bg-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-xl p-4 shadow-lg hover:bg-red-500/20 transition-colors">
@@ -177,7 +179,7 @@ function App() {
                <ScrollingNumber value={tasks.filter((t: any) => {
                  const isOverdue = new Date(t.due_date) < new Date() && t.status !== 'COMPLETED';
                  return isOverdue;
-               }).length} direction="down" />
+               }).length} direction="down" trigger={startNums} />
              </div>
           </div>
         </div>

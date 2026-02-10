@@ -4,11 +4,12 @@ interface ScrollingNumberProps {
   value: number;
   direction?: 'up' | 'down';
   className?: string;
+  trigger?: boolean;
 }
 
 const NUMBERS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-export function ScrollingNumber({ value, direction = 'up', className = '' }: ScrollingNumberProps) {
+export function ScrollingNumber({ value, direction = 'up', className = '', trigger = true }: ScrollingNumberProps) {
   // Convert number to array of digits
   const digits = value.toString().split('').map(Number);
   
@@ -19,20 +20,24 @@ export function ScrollingNumber({ value, direction = 'up', className = '' }: Scr
           key={index} 
           digit={digit} 
           direction={direction} 
-          delay={index * 100} 
+          delay={index * 100}
+          trigger={trigger}
         />
       ))}
     </div>
   );
 }
 
-function Digit({ digit, direction, delay }: { digit: number; direction: 'up' | 'down'; delay: number }) {
+function Digit({ digit, direction, delay, trigger }: { digit: number; direction: 'up' | 'down'; delay: number; trigger: boolean }) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Trigger animation after mount
-    setTimeout(() => setIsMounted(true), 100);
-  }, []);
+    if (trigger) {
+        // Trigger animation after mount/trigger
+        const timer = setTimeout(() => setIsMounted(true), 100);
+        return () => clearTimeout(timer);
+    }
+  }, [trigger]);
   
   const finalPosition = -digit * 10;
   const startPosition = direction === 'up' ? 0 : -90;
