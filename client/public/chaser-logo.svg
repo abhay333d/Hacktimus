@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Speed Lines: Light Pink/Purple to suggest friendly speed -->
+  <path d="M15 50 H30" stroke="#f472b6" stroke-width="6" stroke-linecap="round"/>
+  <path d="M10 65 H25" stroke="#f472b6" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  <path d="M20 35 H35" stroke="#f472b6" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Robot Head: Friendly Light Blue -->
+  <rect x="40" y="25" width="45" height="45" rx="10" fill="#bae6fd" stroke="#0ea5e9" stroke-width="2" />
+  
+  <!-- Eyes: Bright White with Blue Iris -->
+  <circle cx="53" cy="42" r="6" fill="#ffffff" stroke="#0ea5e9" stroke-width="1"/>
+  <circle cx="72" cy="42" r="6" fill="#ffffff" stroke="#0ea5e9" stroke-width="1"/>
+  <circle cx="53" cy="42" r="2" fill="#0ea5e9"/>
+  <circle cx="72" cy="42" r="2" fill="#0ea5e9"/>
+  
+  <!-- Mouth (Smile): Friendly Curve -->
+  <path d="M53 58 Q62.5 65 72 58" stroke="#0ea5e9" stroke-width="3" stroke-linecap="round" fill="none"/>
+  
+  <!-- Antenna: Playful -->
+  <line x1="62.5" y1="25" x2="62.5" y2="10" stroke="#0ea5e9" stroke-width="3"/>
+  <circle cx="62.5" cy="10" r="5" fill="#facc15" stroke="#eab308" stroke-width="1">
+    <animate attributeName="fill" values="#facc15;#fef08a;#facc15" dur="1s" repeatCount="indefinite"/>
+  </circle>
+</svg>

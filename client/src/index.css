@@ -1,20 +1,14 @@
 @import "tailwindcss";
+@config "../tailwind.config.js";
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   
-  /* Custom Theme Variables (mapped to Tailwind if needed, but Tailwind 4 uses CSS vars natively) */
+  /* Custom Theme Variables */
   --color-bg-primary: #ffffff;
   --color-bg-secondary: #f3f4f6;
   --color-text-primary: #111827;
   --color-text-secondary: #4b5563;
-}
-
-.dark {
-  --color-bg-primary: #111827;
-  --color-bg-secondary: #1f2937;
-  --color-text-primary: #f9fafb;
-  --color-text-secondary: #d1d5db;
 }
 
 @theme {
@@ -22,4 +16,11 @@
   --color-bg-secondary: var(--color-bg-secondary);
   --color-text-primary: var(--color-text-primary);
   --color-text-secondary: var(--color-text-secondary);
+  
+  --animate-text-shimmer: text-shimmer 3s linear infinite;
+
+  @keyframes text-shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
 }

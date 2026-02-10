@@ -11,27 +11,7 @@ function App() {
   const [showSmartCheckModal, setShowSmartCheckModal] = useState(false);
   const [smartCheckResults, setSmartCheckResults] = useState(null);
   const [isSmartCheckLoading, setIsSmartCheckLoading] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
-  // Initialize theme from system preference
-  useEffect(() => {
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme('dark');
-    }
-  }, []);
-
-  // Update DOM when theme changes
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
 
   const fetchTasks = () => {
     api.getTasks().then(setTasks).catch(console.error);
@@ -59,35 +39,29 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-200 relative">
+    <div className="min-h-screen text-white transition-colors duration-200 relative">
       <Background3D />
       
       <div className="container mx-auto px-4 py-8 relative z-10">
-        <header className="flex justify-between items-center mb-8 backdrop-blur-sm bg-white/30 dark:bg-black/30 p-4 rounded-xl border border-white/20 shadow-lg">
+        <header className="flex justify-between items-center mb-8 backdrop-blur-[1px] bg-white/[0.03] p-4 rounded-xl border border-white/10 shadow-lg ring-1 ring-white/5">
           <div className="flex items-center gap-3">
-            <span className="text-4xl">🤖</span>
-            <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
+            <span className="text-4xl p-1">🤖</span>
+            <h1 className="text-3xl md:text-3xl p-1 font-extrabold bg-clip-text text-transparent bg-[linear-gradient(to_right,#818cf8,#c084fc,#818cf8)] bg-[length:200%_auto] animate-text-shimmer drop-shadow-sm underline ">
               Automated Chaser Agent
             </h1>
           </div>
           
           <div className="flex items-center gap-4">
-             <button
-              onClick={toggleTheme}
-              className="p-2 rounded-full hover:bg-white/50 dark:hover:bg-black/50 transition-colors"
-              title="Toggle Theme"
-            >
-              {theme === 'light' ? '🌙' : '☀️'}
-            </button>
+
             <button 
               onClick={handleSmartCheck}
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-md transition-colors flex items-center gap-2"
+              className="px-4 py-2 bg-purple-600/40 hover:bg-purple-700/60 backdrop-blur-sm text-white rounded-lg shadow-md transition-all hover:scale-105 flex items-center gap-2 border border-white/10"
             >
-              <span>🚀</span> Run Smart Check
+              <span>🚀</span> Chase All
             </button>
             <button 
               onClick={() => setShowModal(true)}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition-colors"
+              className="px-4 py-2 bg-blue-600/40 hover:bg-blue-700/60 backdrop-blur-sm text-white rounded-lg shadow-md transition-all hover:scale-105 border border-white/10"
             >
               + Add Task
             </button>
@@ -95,7 +69,7 @@ function App() {
         </header>
 
         <main>
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-xl shadow-lg overflow-hidden border border-white/20 dark:border-gray-700">
+          <div className="bg-white/[0.02] backdrop-blur-[1px] rounded-xl shadow-2xl overflow-hidden border border-white/5 ring-1 ring-white/5">
             <TaskTable tasks={tasks} refreshTasks={fetchTasks} />
           </div>
         </main>
