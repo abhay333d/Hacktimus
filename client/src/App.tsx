@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TaskTable } from './components/TaskTable';
-import { AddTaskModal } from './components/AddTaskModal';
-import { SmartCheckModal } from './components/SmartCheckModal';
+import { AddTaskModal } from './components/Modals/AddTaskModal';
+import { SmartCheckModal } from './components/Modals/SmartCheckModal';
 import { Background3D } from './components/Background3D';
 import { api } from './services/api';
 
@@ -67,6 +67,35 @@ function App() {
             </button>
           </div>
         </header>
+
+        {/* Stats Dashboard */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4 shadow-lg hover:bg-white/10 transition-colors">
+             <div className="text-gray-400 text-sm font-medium mb-1">Total Tasks</div>
+             <div className="text-3xl font-bold text-white">{tasks.length}</div>
+          </div>
+          <div className="bg-green-500/10 backdrop-blur-sm border border-green-500/20 rounded-xl p-4 shadow-lg hover:bg-green-500/20 transition-colors">
+             <div className="text-green-300 text-sm font-medium mb-1">Completed</div>
+             <div className="text-3xl font-bold text-green-400">
+               {tasks.filter((t: any) => t.status === 'COMPLETED').length}
+             </div>
+          </div>
+          <div className="bg-yellow-500/10 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-4 shadow-lg hover:bg-yellow-500/20 transition-colors">
+             <div className="text-yellow-300 text-sm font-medium mb-1">Pending</div>
+             <div className="text-3xl font-bold text-yellow-400">
+               {tasks.filter((t: any) => t.status !== 'COMPLETED').length}
+             </div>
+          </div>
+          <div className="bg-red-500/10 backdrop-blur-sm border border-red-500/20 rounded-xl p-4 shadow-lg hover:bg-red-500/20 transition-colors">
+             <div className="text-red-300 text-sm font-medium mb-1">Overdue (Pending)</div>
+             <div className="text-3xl font-bold text-red-400">
+               {tasks.filter((t: any) => {
+                 const isOverdue = new Date(t.due_date) < new Date() && t.status !== 'COMPLETED';
+                 return isOverdue;
+               }).length}
+             </div>
+          </div>
+        </div>
 
         <main>
           <div className="bg-black/30 rounded-xl shadow-2xl overflow-hidden border border-white/5 ring-1 ring-white/5">

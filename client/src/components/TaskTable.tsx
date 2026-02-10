@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 
 
-import { ChaseModal } from './ChaseModal';
-import { DeleteConfirmationModal } from './DeleteConfirmationModal';
+import { ChaseModal } from './Modals/ChaseModal';
+import { DeleteConfirmationModal } from './Modals/DeleteConfirmationModal';
 
 interface Task {
     id: number;
@@ -89,6 +89,7 @@ export function TaskTable({ tasks, refreshTasks }: Props) {
             <table className="w-full text-left border-collapse min-w-[800px]">
                 <thead>
                     <tr className="bg-white/5 border-b border-white/10 text-gray-200">
+                        <th className="p-4 font-semibold w-16 text-center">#</th>
                         <th className="p-4 font-semibold w-1/4 text-center">Title</th>
                         <th className="p-4 font-semibold w-1/6 text-center">Assignee</th>
                         <th className="p-4 font-semibold w-1/6 text-center">Due Date</th>
@@ -104,6 +105,7 @@ export function TaskTable({ tasks, refreshTasks }: Props) {
                         
                         return (
                         <tr key={task.id} className="hover:bg-white/10 transition-colors duration-200">
+                            <td className="p-4 text-gray-400 font-mono text-center align-middle">{index + 1}</td>
                             <td className="p-4 font-medium text-white whitespace-normal break-words align-middle text-center shadow-sm">{task.title}</td>
                             <td className="p-4 text-gray-300 align-middle text-center">{task.assignee_name}</td>
                             <td className="p-4 text-gray-300 align-middle text-center">{new Date(task.due_date).toLocaleDateString()}</td>
