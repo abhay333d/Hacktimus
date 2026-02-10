@@ -85,7 +85,7 @@ export function TaskTable({ tasks, refreshTasks }: Props) {
     };
 
     return (
-        <div className="overflow-visible min-h-[400px]">
+        <div className="overflow-y-auto max-h-[75vh] min-h-[400px] custom-scrollbar pb-32">
             <table className="w-full text-left border-collapse">
                 <thead>
                     <tr className="bg-white/5 border-b border-white/10 text-gray-200">
