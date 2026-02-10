@@ -36,7 +36,7 @@ function Earth() {
   };
 
   // Sun
-  const sunShpere = new THREE.Spherical(1, Math.PI * 0.5, 0.5);
+  const sunShpere = new THREE.Spherical(1, Math.PI * 0.5, 0.0);
   const sunDirection = new THREE.Vector3();
   
   // Set sun direction

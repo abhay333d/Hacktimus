@@ -1,4 +1,5 @@
 
+import { Loader } from '../Loader';
 
 interface Props {
     isOpen: boolean;
@@ -29,15 +30,7 @@ export function SmartCheckModal({ isOpen, onClose, results, isLoading }: Props) 
                     </div>
 
                     {isLoading ? (
-                        <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                            <div className="relative w-16 h-16">
-                                <div className="absolute top-0 left-0 w-full h-full border-4 border-purple-200 dark:border-purple-900 rounded-full"></div>
-                                <div className="absolute top-0 left-0 w-full h-full border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
-                            </div>
-                            <p className="text-gray-600 dark:text-gray-300 font-medium animate-pulse">
-                                Scanning for overdue tasks...
-                            </p>
-                        </div>
+                        <Loader message="Scanning for overdue tasks..." />
                     ) : (
                         <div className="space-y-6">
                             <div className={`p-6 rounded-xl text-center transition-colors ${

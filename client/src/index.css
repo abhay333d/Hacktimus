@@ -48,3 +48,60 @@
     background: rgba(255, 255, 255, 0.4);
   }
 }
+
+/* Hide default body scrollbar but allow scrolling */
+/* Global Scrollbar Hiding Strategy */
+
+/* 1. Hide default scrollbar on everything */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+  width: 0px;
+  background: transparent;
+}
+
+/* 2. Restore standard body scrolling behavior */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* Allow vertical scrolling but hidden bars */
+  overflow-y: auto; 
+}
+
+#root {
+  min-height: 100vh; /* Ensure root expands */
+}
+
+/* 3. Explicitly show custom scrollbar on marked elements */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.02);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: block;
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
