@@ -69,7 +69,7 @@ function App() {
         </header>
 
         <main>
-          <div className="bg-white/[0.02] backdrop-blur-[1px] rounded-xl shadow-2xl overflow-hidden border border-white/5 ring-1 ring-white/5">
+          <div className="bg-black/30 rounded-xl shadow-2xl overflow-hidden border border-white/5 ring-1 ring-white/5">
             <TaskTable tasks={tasks} refreshTasks={fetchTasks} />
           </div>
         </main>
