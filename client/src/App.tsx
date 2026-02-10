@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react';
 import { TaskTable } from './components/TaskTable';
 import { AddTaskModal } from './components/AddTaskModal';
+import { SmartCheckModal } from './components/SmartCheckModal';
 import { Background3D } from './components/Background3D';
 import { api } from './services/api';
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showSmartCheckModal, setShowSmartCheckModal] = useState(false);
+  const [smartCheckResults, setSmartCheckResults] = useState(null);
+  const [isSmartCheckLoading, setIsSmartCheckLoading] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   // Initialize theme from system preference
@@ -38,13 +42,19 @@ function App() {
   }, []);
 
   const handleSmartCheck = async () => {
+    setIsSmartCheckLoading(true);
+    setShowSmartCheckModal(true);
+    setSmartCheckResults(null);
     try {
       const res = await api.checkOverdue();
-      alert(`Smart Check Complete. Triggered ${res.chased_count} chases.`);
+      setSmartCheckResults(res);
       fetchTasks();
     } catch (err) {
       console.error(err);
-      alert('Failed to run smart check');
+      alert('Failed to run smart check'); // Fallback if modal fails
+      setShowSmartCheckModal(false);
+    } finally {
+      setIsSmartCheckLoading(false);
     }
   };
 
@@ -71,9 +81,9 @@ function App() {
             </button>
             <button 
               onClick={handleSmartCheck}
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-md transition-colors"
+              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-md transition-colors flex items-center gap-2"
             >
-              Run Smart Check
+              <span>🚀</span> Run Smart Check
             </button>
             <button 
               onClick={() => setShowModal(true)}
@@ -95,6 +105,15 @@ function App() {
         <AddTaskModal 
           onClose={() => setShowModal(false)} 
           onTaskAdded={fetchTasks} 
+        />
+      )}
+
+      {showSmartCheckModal && (
+        <SmartCheckModal
+            isOpen={showSmartCheckModal}
+            onClose={() => setShowSmartCheckModal(false)}
+            results={smartCheckResults}
+            isLoading={isSmartCheckLoading}
         />
       )}
     </div>
